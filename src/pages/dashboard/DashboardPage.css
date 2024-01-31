@@ -1,0 +1,71 @@
+.adminpage {
+    margin: 40px;
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+.dashboard{
+    color: var(--Dark-Gray, #232321);
+    /* Rubik/36px */
+    font-family: Cambria, Cochin, Georgia, Times, 'Times New Roman', serif;
+    font-size: 36px;
+    font-style: normal;
+    font-weight: 600;
+    line-height: normal;
+    padding-bottom: 0px;
+}
+    div {
+        display: flex;
+        width: 480px;
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 8px;
+
+        .info-txt {
+            color: var(--Dark-Gray, #232321);
+
+            /* Rubik/24px */
+            font-family: Cambria, Cochin, Georgia, Times, 'Times New Roman', serif;
+            font-size: 24px;
+            font-style: normal;
+            font-weight: 600;
+            line-height: normal;
+        }
+
+        input {
+            color: var(--Neutrals-Gray-6, #79767C);
+
+            /* Copy/Body 1 */
+            font-family: 'Inter';
+            font-size: 16px;
+            font-style: normal;
+            font-weight: 400;
+            line-height: normal;
+            letter-spacing: 0.5px;
+
+
+            width: 480px;
+            height: 48px;
+            display: flex;
+            height: 48px;
+            padding: 10px 16px;
+            align-items: center;
+            gap: 8px;
+            align-self: stretch;
+            border-radius: 8px;
+            border: 1px solid var(--Dark-Gray, #232321);
+        }
+    }
+}
+
+button{
+    margin-left: 50px;
+    color: white;
+    background-color: black;
+    border: none;
+    border-radius: 4px;
+    width: 100px;
+    height: 40px;
+}
+button:hover{
+    cursor: pointer;
+}
