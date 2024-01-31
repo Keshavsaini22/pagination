@@ -1,5 +1,5 @@
 import React from 'react'
-
+import './SingleCard.css'
 function SingleCard({name,price}) {
   return (
     <div className="card">

@@ -1,42 +1,58 @@
-import React, { useEffect, useState } from 'react'
+import React, { useEffect, useRef, useState } from 'react'
 import ReactPaginate from 'react-paginate';
 import axios from 'axios'
 import SingleCard from '../../components/SingleCard/SingleCard';
+// import styled from 'styled-components';
 
 
 function Allusers() {
-  const [data, setdata] = useState({});
-  const [currentPage, setcurrentPage] = useState(1);
+
+
+  const [data, setdata] = useState([]);
+  // const [currentPage, setcurrentPage] = useState(1);
   const [pageCount, setPageCount] = useState();
 
-  const [limit, setlimit] = useState(3);
-
-  useEffect(() => { getPaginatedUsers() }, [])
+  const [limit, setLimit] = useState(4);
+  const currentPage = useRef();
+  useEffect(() => {
+    currentPage.current = 1
+    getPaginatedUsers()
+  }, [])
 
 
   const handlePageClick = async (e) => {
-console.log(e)
+    console.log(e)
+    currentPage.current = e.selected + 1;
+    console.log(currentPage, "currentpage")
+    getPaginatedUsers()
   }
-
+  function changeLimit() {
+    currentPage.current = 1;
+    getPaginatedUsers();
+  }
 
   const getPaginatedUsers = async () => {
     try {
-      // console.log(limit,currentPage,"deep");
-      const response = await axios.get(`http://localhost:5000/products?page=${currentPage}&limit=${currentPage}`);
+      console.log("gggggggggggggggggggggggggggggggggggggdeep");
+      const response = await axios.get(`http://localhost:5000/products?page=${currentPage.current}&limit=${limit}`);
       // http://localhost:5000/products?page=1&limit=4
 
-      console.log("res", response);
+      // console.log("res", response);
 
       if (response.status === 200) {
-        console.log(response.data.results.pageCount,"keshav")
-        setdata(response.data.results)
+        console.log(response.data.results.pageCount, "keshav")
+        setPageCount(response.data.results.pageCount)
+        setdata(response.data.results.result)
         console.log(data)
-        setPageCount(data.pageCount)
+
+
+        // console.log(data[2].name)
+
         // console.log(data.totalUser)
         // alert('Successful SignIn')
 
       }
-      else{
+      else {
         console.log("This is error")
       }
 
@@ -51,8 +67,9 @@ console.log(e)
 
   return (
     <>
-      <SingleCard />
-
+      {data.map((i) => {
+        return (<SingleCard name={i.name} price={i.price}/>)
+      })}
       <ReactPaginate
         breakLabel="..."
         nextLabel="next >"
@@ -70,10 +87,11 @@ console.log(e)
         nextClassName="page-item"
         nextLinkClassName="page-link"
         activeClassName="active"
-        // forcePage={currentPage.current - 1}
+      forcePage={currentPage.current - 1}
 
       />
-      
+      <input placeholder="Limit" onChange={e => setLimit(e.target.value)} />
+      <button onClick={changeLimit}>Set Limit</button>
     </>
   )
 }
