@@ -37,11 +37,6 @@ function SingleCard({ name, price, id, setdata, data, desc, category, tag, amoun
         console.log(response)
         const filterdata = data.filter(item => item._id != id)
         setdata(filterdata)
-        // setdata(prev=>prev.filter(item=>item._id!=id))
-        // setdata((pre)=>{
-        //   const filterdata=pre.filter(item=>item._id!=id)
-        //   return filterdata;
-        // })
       }
       else {
         console.log("This is error")
