@@ -3,4 +3,8 @@
     padding: 25px;
     background-color: aquamarine;
     border-radius: 10px;
+    width: 50%;
+}
+button{
+    margin: 5px;
 }

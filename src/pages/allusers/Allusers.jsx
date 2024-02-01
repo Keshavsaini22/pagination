@@ -2,12 +2,12 @@ import React, { useEffect, useRef, useState } from 'react'
 import ReactPaginate from 'react-paginate';
 import axios from 'axios'
 import SingleCard from '../../components/SingleCard/SingleCard';
+import { useNavigate } from 'react-router-dom';
 // import styled from 'styled-components';
 
 
 function Allusers() {
-
-
+const navigate=useNavigate();
   const [data, setdata] = useState([]);
   // const [currentPage, setcurrentPage] = useState(1);
   const [pageCount, setPageCount] = useState();
@@ -19,7 +19,7 @@ function Allusers() {
     getPaginatedUsers()
   }, [])
 
-
+const handleDashboardRequest=()=> navigate('/') 
   const handlePageClick = async (e) => {
     console.log(e)
     currentPage.current = e.selected + 1;
@@ -44,13 +44,6 @@ function Allusers() {
         setPageCount(response.data.results.pageCount)
         setdata(response.data.results.result)
         console.log(data)
-
-
-        // console.log(data[2].name)
-
-        // console.log(data.totalUser)
-        // alert('Successful SignIn')
-
       }
       else {
         console.log("This is error")
@@ -64,11 +57,10 @@ function Allusers() {
     }
   }
 
-
   return (
     <>
       {data.map((i) => {
-        return (<SingleCard name={i.name} price={i.price}/>)
+        return (<SingleCard data={data} setdata={setdata} key={i._id} name={i.name} price={i.price} desc={i.desc} category={i.category} tag={i.tag} amount={i.amount} id={i._id}/>)
       })}
       <ReactPaginate
         breakLabel="..."
@@ -92,6 +84,7 @@ function Allusers() {
       />
       <input placeholder="Limit" onChange={e => setLimit(e.target.value)} />
       <button onClick={changeLimit}>Set Limit</button>
+      <div><button onClick={handleDashboardRequest}>Go to dashboard</button></div>
     </>
   )
 }

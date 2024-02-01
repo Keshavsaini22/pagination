@@ -10,7 +10,7 @@ function AllRoutes() {
         <Route path='/' element={<DashboardPage/>}/>
         {/* <Route path='land' */}
         <Route path='/allusers' element={<Allusers/>}/>
-        <Route path='/user' element={<UserDetail/>}/>
+        <Route path='/user/:id' element={<UserDetail/>}/>
         
     </Routes>
   )
