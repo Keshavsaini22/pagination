@@ -7,9 +7,9 @@ function DashboardPage() {
     const navigate = useNavigate();
     const [category, setCategory] = useState('basketball');
     const [input, setinput] = useState({
-        firstname: "",
-        lastname: "",
-        email: "",
+        // firstname: "",
+        // lastname: "",
+        // email: "",
         // role:"",
         password: "",
         name: "",
@@ -38,9 +38,14 @@ function DashboardPage() {
 
             if (response.status === 200) {
                 console.log(response.data)
-                
-                alert('Successful SignIn')
-                
+                setinput({password: "",
+                name: "",
+                price: "",
+                desc: "",
+                tag: "",
+                amount: ""})
+                alert('Successfully Added')
+
             }
 
         }
@@ -61,15 +66,15 @@ function DashboardPage() {
                     </div>
                     <div className="productname">
                         <div className="info-txt">Product Name</div>
-                        <input type="text" required name='name' onChange={getdata} />
+                        <input type="text" required name='name' value={input.name} onChange={getdata} />
                     </div>
                     <div className="productprice">
                         <div className="info-txt">Product Price</div>
-                        <input type="text" required name='price' onChange={getdata} />
+                        <input type="text" required name='price' value={input.price} onChange={getdata} />
                     </div>
                     <div className="productdesc">
                         <div className="info-txt">Product Description</div>
-                        <input type="text" required name='desc' onChange={getdata} />
+                        <input type="text" required name='desc' onChange={getdata} value={input.desc}/>
                     </div>
                     <div className="productcategory">
                         <label for="role">Choose a category:</label>
@@ -84,11 +89,11 @@ function DashboardPage() {
                     </div>
                     <div className="tag">
                         <div className="info-txt">Product Tag</div>
-                        <input type="text" required name='tag' onChange={getdata} />
+                        <input type="text" required name='tag' onChange={getdata}  value={input.tag}/>
                     </div>
                     <div className="productstock">
                         <div className="info-txt">Amount of product</div>
-                        <input type='text' required name='amount' onChange={getdata} />
+                        <input type='text' required name='amount' onChange={getdata} value={input.amount}/>
                     </div>
                     <div className="btn">
                     </div>
