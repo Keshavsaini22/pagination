@@ -79,7 +79,6 @@ function SingleCard({
 
   //   }
   // }
-  const [cate, setCate] = useState(data.cate);
 
   const handleupdateSubmit = async (e) => {
     console.log(data, 'mydataaaaaa')
@@ -108,14 +107,7 @@ function SingleCard({
 
   }
 
-
-  useEffect(() => {
-    console.log(data)
-  }, [data])
-
-  if (!data) return;
   const handleOnChange = (e) => {
-
     const value = e.target.value;
     const name = e.target.name;
     console.log('value', value)
@@ -125,10 +117,6 @@ function SingleCard({
     })
 
   }
-
-
-
-
   return (
     <>
       {/* <div className="card"  >

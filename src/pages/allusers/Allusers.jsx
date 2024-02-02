@@ -82,7 +82,7 @@ function Allusers() {
     }
   }
 
-  const handleUpdateCallback = (updatedData) => {
+  const handleeditCallback = (updatedData) => {
     setdata((prevData) => {
       const index = prevData.findIndex((item) => item._id === updatedData._id);
       const updatarray = [...prevData];
@@ -194,7 +194,7 @@ function Allusers() {
         </div>
         {items && <SingleCard data={items}
             setItems={setItems}
-            onUpdate={handleUpdateCallback} />}
+            onUpdate={handleeditCallback} />}
 
       </div>
     </div>
