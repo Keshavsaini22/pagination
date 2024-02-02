@@ -1,17 +1,24 @@
 import React, { useEffect, useRef, useState } from 'react'
-import ReactPaginate from 'react-paginate';
 import axios from 'axios'
 import SingleCard from '../../components/SingleCard/SingleCard';
 import { useNavigate } from 'react-router-dom';
 // import styled from 'styled-components';
-
+import './Allusers.css'
 
 function Allusers() {
-  const navigate = useNavigate();
+  const navigatedash = useNavigate();
+  const navigatedetail = useNavigate();
+
   const [data, setdata] = useState([]);
   const [page, setPage] = useState(1);
   const [size, setSize] = useState(5);
   const [count, setCount] = useState();
+  const [items, setItems] = useState(null);
+
+  const[flag,setFlag]=useState('');
+
+
+
   const handlePageSizeChange = (e) => {
     setSize(parseInt(e.target.value));
     setPage(1);
@@ -19,13 +26,19 @@ function Allusers() {
 
   useEffect(() => {
     fetchData();
-  }, [page, size]);
+    console.log("useeffectttt")
+  }, [page, size,flag]);
 
+  const handlesortChange = (e) => {
+    setFlag(e.target.value);
+    console.log(flag)
+    
+  };
 
-  const handleDashboardRequest = () => navigate('/')
+  const handleDashboardRequest = () => navigatedash('/')
   const fetchData = async () => {
     try {
-      const response = await axios.get(`http://localhost:5000/products?page=${page}&limit=${size}`);
+      const response = await axios.get(`http://localhost:5000/products?page=${page}&limit=${size}&flag=${flag}`);
       console.log('response.data.Info:', response.data.Info)
       setdata(response.data.Info);
       setCount(Math.ceil(response.data.Count / size))
@@ -34,42 +47,47 @@ function Allusers() {
       console.error('Error fetching data:', error);
     }
   };
-  //   const handlePageClick = async (e) => {
-  //     console.log(e)
-  //     currentPage.current = e.selected + 1;
-  //     console.log(currentPage, "currentpage")
-  //     getPaginatedUsers()
-  //   }
-  //   function changeLimit() {
-  //     currentPage.current = 1;
-  //     getPaginatedUsers();
-  //   }
 
-  // const getPaginatedUsers = async () => {
-  //   try {
-  //     console.log("gggggggggggggggggggggggggggggggggggggdeep");
-  //     const response = await axios.get(`http://localhost:5000/products?page=${currentPage.current}&limit=${limit}`);
-  //     // http://localhost:5000/products?page=1&limit=4
+  const handleUpdate = (item) => {
+     setItems(item);
+    console.log('itemmsss', items)
 
-  //     // console.log("res", response);
+  }
 
-  //     if (response.status === 200) {
-  //       console.log(response.data.results.pageCount, "keshav")
-  //       setPageCount(response.data.results.pageCount)
-  //       setdata(response.data.results.result)
-  //       console.log(data)
-  //     }
-  //     else {
-  //       console.log("This is error")
-  //     }
 
-  //   }
-  //   catch (error) {
-  //     alert(error)
-  //     console.error('Error:', error);
+  const handleDelete = async (item) => {
+    const id = item._id;
+    console.log('id delete', id)
+    try {
+      const response = await axios.delete(`http://localhost:5000/deleteproduct?id=${id}`);
+      console.log("res", response);
+      if (response.status === 200) {
+        fetchData();
+        const deletedData = data.filter((del) => del._id === id);
+        setdata(deletedData)
+        // setItems(null);
+      }
+    }
+    catch (error) {
+      alert(error)
+      console.error('Error:', error);
 
-  //   }
-  // }
+    }
+  }
+
+
+  const handleUpdateCallback = (updatedData) => {
+    setdata((prevData) => {
+      const index = prevData.findIndex((item) => item._id === updatedData._id);
+      const updatarray = [...prevData];
+      updatarray[index] = updatedData;
+      return updatarray;
+    })
+  }
+
+  const handleNextpage=(item)=>(
+    navigatedetail(`/user/${item._id}`))
+
 
   return (
     <>
@@ -85,25 +103,38 @@ function Allusers() {
 
         </select>
       </div>
+
+      <div className='setlimit'>
+        <label>sort by : </label>
+        <select className='select' value={flag} onChange={handlesortChange}>
+          <option value='1' >Salary </option>
+          <option value='0'>Name</option>
+
+        </select>
+      </div>
       <table>
         <tr>
           <th>Product Name</th>
           <th>Product Price</th>
+          <th>Product Category</th>
           <th>Edit</th>
           <th>Delete</th>
         </tr>
         {data.map((item) => (
           <tr key={item._id}>
-            <td className='linkto' >
+            <td className='linkto' onClick={() => handleNextpage(item)}>
               {item.name}
             </td>
             <td >
               {item.price}
             </td>
-            <td className='linkto'>
+            <td >
+              {item.category}
+            </td>
+            <td className='linkto' onClick={() => handleUpdate(item)}>
               Edit
             </td>
-            <td className='linkto' >
+            <td className='linkto' onClick={() => handleDelete(item)}>
               Delete
             </td>
 
@@ -120,31 +151,11 @@ function Allusers() {
         <button disabled={page === count} onClick={() => setPage(page + 1)}>Next</button>
       </div>
 
-      {
-        /* {data.map((i) => {
-          return (<SingleCard data={data} setdata={setdata} key={i._id} name={i.name} price={i.price} desc={i.desc} category={i.category} tag={i.tag} amount={i.amount} id={i._id}/>)
-        })}
-        <ReactPaginate
-          breakLabel="..."
-          nextLabel="next >"
-          onPageChange={handlePageClick}
-          pageRangeDisplayed={5}
-          pageCount={pageCount}
-          previousLabel="< previous"
-          renderOnZeroPageCount={null}
-          marginPagesDisplayed={2}
-          containerClassName="pagination justify-content-center"
-          pageClassName="page-item"
-          pageLinkClassName="page-link"
-          previousClassName="page-item"
-          previousLinkClassName="page-link"
-          nextClassName="page-item"
-          nextLinkClassName="page-link"
-          activeClassName="active"
-        forcePage={currentPage.current - 1}/>
-        <input placeholder="Limit" onChange={e => setLimit(e.target.value)} />
-        <button onClick={changeLimit}>Set Limit</button> */
-      }
+      {items && <SingleCard data={items}
+        setItems={setItems}
+        onUpdate={handleUpdateCallback} />}
+
+
 
       <div><button onClick={handleDashboardRequest}>Go to dashboard</button></div>
     </>

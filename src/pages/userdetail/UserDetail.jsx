@@ -6,7 +6,6 @@ import './UserData.css'
 
 function UserDetail() {
   const [product, setproduct] = useState({});
-  const [edit, setedit] = useState(false);
   let { id } = useParams();
   useEffect(() => {
     async function UserFunc() {
@@ -23,12 +22,7 @@ function UserDetail() {
     }
   })
 
-  const handlesubmit = () => {
-    setedit(!edit);
-    console.log(edit)
-  }
 
-  console.log(id, "keshav")
   return (
     <>
       <div className="adminpage">
@@ -60,16 +54,9 @@ function UserDetail() {
         </div>
         <div className="btn">
         </div>
-        <button type="Edit" onClick={handlesubmit}>Submit</button>
 
       </div>
-      {edit &&
-        <>
-          <div className="editpage" >
-            hello
-          </div>
-        </>}
-
+      
     </>
   )
 }
