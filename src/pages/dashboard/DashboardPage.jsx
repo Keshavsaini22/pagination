@@ -70,7 +70,7 @@ function DashboardPage() {
                     </div>
                     <div className="productprice">
                         <div className="info-txt">Product Price</div>
-                        <input type="text" required name='price' value={input.price} onChange={getdata} />
+                        <input type="number" required name='price' value={input.price} onChange={getdata} />
                     </div>
                     <div className="productdesc">
                         <div className="info-txt">Product Description</div>
@@ -93,7 +93,7 @@ function DashboardPage() {
                     </div>
                     <div className="productstock">
                         <div className="info-txt">Amount of product</div>
-                        <input type='text' required name='amount' onChange={getdata} value={input.amount}/>
+                        <input type='number' required name='amount' onChange={getdata} value={input.amount}/>
                     </div>
                     <div className="btn">
                     </div>

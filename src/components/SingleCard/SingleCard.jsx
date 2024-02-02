@@ -153,7 +153,7 @@ function SingleCard({
           </div>
           <div className="productprice">
             <div className="info-txt">Product Price</div>
-            <input type="text" required name='price' value={data.price} onChange={handleOnChange}
+            <input type="number" required name='price' value={data.price} onChange={handleOnChange}
             />
           </div>
           <div className="productdesc">
@@ -164,12 +164,8 @@ function SingleCard({
           <div className="productcategory">
             <label for="role">Choose a category:</label>
 
-            <select name="category" id="category" onChange={
-              (e) => {
-                setCate(e.target.value);
-                console.log(cate);
-              }
-            }>
+            <select name="category" id="category" value={data.category} onChange={handleOnChange}
+            >
               <option value="basketball">Basketball</option>
               <option value="lifestyle">Lifestyle</option>
             </select>
@@ -181,7 +177,7 @@ function SingleCard({
           </div>
           <div className="productstock">
             <div className="info-txt">Amount of product</div>
-            <input type='text' required name='amount' value={data.amount} onChange={handleOnChange}
+            <input type='number' required name='amount' value={data.amount} onChange={handleOnChange}
             />
           </div>
           <div className="btn">

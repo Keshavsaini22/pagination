@@ -2,6 +2,9 @@ import React, { useEffect, useRef, useState } from 'react'
 import axios from 'axios'
 import SingleCard from '../../components/SingleCard/SingleCard';
 import { useNavigate } from 'react-router-dom';
+import { MdDelete } from "react-icons/md";
+import { FaEdit, FaSearch } from "react-icons/fa";
+
 // import styled from 'styled-components';
 import './Allusers.css'
 
@@ -14,9 +17,9 @@ function Allusers() {
   const [size, setSize] = useState(5);
   const [count, setCount] = useState();
   const [items, setItems] = useState(null);
-
-  const[flag,setFlag]=useState('');
-
+  const [search, setsearch] = useState();
+  const [flag, setFlag] = useState('0');
+  const [category, setCategory] = useState();
 
 
   const handlePageSizeChange = (e) => {
@@ -27,18 +30,23 @@ function Allusers() {
   useEffect(() => {
     fetchData();
     console.log("useeffectttt")
-  }, [page, size,flag]);
+  }, [page, size, flag, category, search]);
 
-  const handlesortChange = (e) => {
-    setFlag(e.target.value);
-    console.log(flag)
-    
-  };
+  const handleNextpage = (item) => (
+    navigatedetail(`/user/${item._id}`))
 
   const handleDashboardRequest = () => navigatedash('/')
   const fetchData = async () => {
     try {
-      const response = await axios.get(`http://localhost:5000/products?page=${page}&limit=${size}&flag=${flag}`);
+      var url = `http://localhost:5000/products?page=${page}&limit=${size}&flag=${flag}`
+
+      if (category) {
+        url = url + `&category=${category}`
+      }
+      if (search) {
+        url = url + `&search=${search}`
+      }
+      const response = await axios.get(url);
       console.log('response.data.Info:', response.data.Info)
       setdata(response.data.Info);
       setCount(Math.ceil(response.data.Count / size))
@@ -49,11 +57,10 @@ function Allusers() {
   };
 
   const handleUpdate = (item) => {
-     setItems(item);
+    setItems(item);
     console.log('itemmsss', items)
 
   }
-
 
   const handleDelete = async (item) => {
     const id = item._id;
@@ -75,7 +82,6 @@ function Allusers() {
     }
   }
 
-
   const handleUpdateCallback = (updatedData) => {
     setdata((prevData) => {
       const index = prevData.findIndex((item) => item._id === updatedData._id);
@@ -84,81 +90,114 @@ function Allusers() {
       return updatarray;
     })
   }
-
-  const handleNextpage=(item)=>(
-    navigatedetail(`/user/${item._id}`))
-
+  const handleSearch = (e) => {
+    e.preventDefault();
+    fetchData();
+  }
 
   return (
-    <>
-      <div className='setlimit'>
-        <label>No. of Data : </label>
-        <select className='select' value={size} onChange={handlePageSizeChange}>
-          <option value={2}>2</option>
-          <option value={4}>4</option>
-          <option value={6}>6</option>
-          <option value={5}>5</option>
-          <option value={10}>10</option>
-          <option value={15}>15</option>
+    <div className='alldatasection'>
+      <h1>PRODUCTS DATA</h1>
+      <div className="upper">
+        <div className="top-bar">
+          <div className='setlimit'>
+            <label>No. of Data : </label>
+            <select className='select' value={size} onChange={handlePageSizeChange}>
+              <option value={5}>5</option>
+              <option value={2}>2</option>
+              <option value={4}>4</option>
+              <option value={6}>6</option>
+              <option value={10}>10</option>
+              <option value={15}>15</option>
 
-        </select>
+            </select>
+          </div>
+          <div className="search">
+            <form onSubmit={handleSearch}>
+              <input type="text" placeholder='Search......' value={search} onChange={(e) => {
+                setsearch(e.target.value)
+                console.log(e.target.value)
+              }} />
+              {/* <button type="submit"><FaSearch /></button> */}
+            </form>
+          </div>
+        </div>
+        <div className="top-bar">
+          <div className="productcategory">
+            <label for="role">Choose a category:</label>
+            <select name="category" id="category" value={category} onChange={(e) => {
+              setCategory(e.target.value);
+              // console.log(e.target.value);
+            }}><option value="">All Data</option>
+              <option value="lifestyle">Lifestyle</option>
+              <option value="basketball">Basketball</option>
+            </select>
+          </div>
+          <div className="setlimit">
+            <label for="role">Sort by Price:</label>
+            <select name="category" id="category" value={flag} onChange={(e) => {
+              setFlag(e.target.value);
+            }}>
+              <option value="0">Normal</option>
+              <option value="1">Ascending</option>
+              <option value="-1">Descending</option>
+
+            </select>
+          </div>
+        </div>
       </div>
-
-      <div className='setlimit'>
-        <label>sort by : </label>
-        <select className='select' value={flag} onChange={handlesortChange}>
-          <option value='1' >Salary </option>
-          <option value='0'>Name</option>
-
-        </select>
-      </div>
-      <table>
+      <table className='products-data'>
         <tr>
           <th>Product Name</th>
-          <th>Product Price</th>
-          <th>Product Category</th>
+          <th className='price-cell'>
+            <div>Product Price</div>
+          </th>
+          <th>
+            <div>Product Category</div>
+          </th>
           <th>Edit</th>
           <th>Delete</th>
         </tr>
         {data.map((item) => (
           <tr key={item._id}>
-            <td className='linkto' onClick={() => handleNextpage(item)}>
+            <td className='name' onClick={() => handleNextpage(item)}>
               {item.name}
             </td>
-            <td >
+            <td className='price'>
               {item.price}
             </td>
             <td >
               {item.category}
             </td>
-            <td className='linkto' onClick={() => handleUpdate(item)}>
-              Edit
-            </td>
-            <td className='linkto' onClick={() => handleDelete(item)}>
-              Delete
-            </td>
+            <td className='edit' onClick={() => handleUpdate(item)}>
+              <FaEdit />
 
+            </td>
+            <td className='delete' onClick={() => handleDelete(item)}>
+              <MdDelete />
+            </td>
           </tr>
         ))}
       </table>
 
-      <div>
+      <div className="lower">
+        <div className='lower-tab'>
+          <div>
+            <button className='btn' disabled={page === 1} onClick={() => setPage(page - 1)}>
+              Prev
+            </button>
+            <span> {page}/{count} </span>
+            <button className='btn' disabled={page === count} onClick={() => setPage(page + 1)}>Next</button>
+          </div>
+          <div><button className='btn' onClick={handleDashboardRequest}>Go to dashboard</button></div>
 
-        <button disabled={page === 1} onClick={() => setPage(page - 1)}>
-          Previous
-        </button>
-        <span> Page {page} </span>
-        <button disabled={page === count} onClick={() => setPage(page + 1)}>Next</button>
+        </div>
+        {items && <SingleCard data={items}
+            setItems={setItems}
+            onUpdate={handleUpdateCallback} />}
+
       </div>
-
-      {items && <SingleCard data={items}
-        setItems={setItems}
-        onUpdate={handleUpdateCallback} />}
-
-
-
-      <div><button onClick={handleDashboardRequest}>Go to dashboard</button></div>
-    </>
+    </div>
   )
 }
 
